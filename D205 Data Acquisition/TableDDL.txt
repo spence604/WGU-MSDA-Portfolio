@@ -1,0 +1,150 @@
+-- Table: public.payment
+
+-- DROP TABLE public.payment;
+
+CREATE TABLE public.payment
+(
+    payment_id integer NOT NULL,
+    payment_type text COLLATE pg_catalog."default",
+    CONSTRAINT payment_pkey PRIMARY KEY (payment_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.payment
+    OWNER to postgres;
+
+-- Table: public.location
+
+-- DROP TABLE public.location;
+
+CREATE TABLE public.location
+(
+    location_id integer NOT NULL,
+    zip integer,
+    city text COLLATE pg_catalog."default",
+    state text COLLATE pg_catalog."default",
+    county text COLLATE pg_catalog."default",
+    CONSTRAINT location_pkey PRIMARY KEY (location_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.location
+    OWNER to postgres;
+
+-- Table: public.job
+
+-- DROP TABLE public.job;
+
+CREATE TABLE public.job
+(
+    job_id integer NOT NULL,
+    job_title text COLLATE pg_catalog."default",
+    CONSTRAINT job_pkey PRIMARY KEY (job_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.job
+    OWNER to postgres;
+
+-- Table: public.contract
+
+-- DROP TABLE public.contract;
+
+CREATE TABLE public.contract
+(
+    contract_id integer NOT NULL,
+    duration text COLLATE pg_catalog."default",
+    CONSTRAINT contract_pkey PRIMARY KEY (contract_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.contract
+    OWNER to postgres;
+
+-- Table: public.customer
+
+-- DROP TABLE public.customer;
+
+CREATE TABLE public.customer
+(
+    customer_id text COLLATE pg_catalog."default" NOT NULL,
+    lat numeric,
+    lng numeric,
+    population integer,
+    children integer,
+    age integer,
+    income numeric,
+    marital text COLLATE pg_catalog."default",
+    churn text COLLATE pg_catalog."default",
+    gender text COLLATE pg_catalog."default",
+    tenure numeric,
+    monthly_charge numeric,
+    bandwidth_gp_year numeric,
+    outage_sec_week numeric,
+    email integer,
+    contacts integer,
+    yearly_equip_faiure integer,
+    techie text COLLATE pg_catalog."default",
+    port_modem text COLLATE pg_catalog."default",
+    tablet text COLLATE pg_catalog."default",
+    job_id integer,
+    payment_id integer,
+    contract_id integer,
+    location_id integer,
+    CONSTRAINT customer_pkey PRIMARY KEY (customer_id),
+    CONSTRAINT customer_contract_id_fkey FOREIGN KEY (contract_id)
+        REFERENCES public.contract (contract_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT customer_job_id_fkey FOREIGN KEY (job_id)
+        REFERENCES public.job (job_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT customer_location_id_fkey FOREIGN KEY (location_id)
+        REFERENCES public.location (location_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT customer_payment_id_fkey FOREIGN KEY (payment_id)
+        REFERENCES public.payment (payment_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.customer
+    OWNER to postgres;
+
+-- new table for the add-on for services
+create table services ( 
+	customer_id varchar(30), 
+	internetservice varchar(25), 
+	phone varchar(3),
+	multiple varchar(3),
+	Onlinesecurity varchar(3),
+	Onlinebackup varchar(3),
+	DeviceProtection varchar(3),
+	techsupport varchar(3),
+	CONSTRAINT services_pkey PRIMARY KEY (customer_id)
+);
+
+create table survey_responses ( 
+	customer_id varchar(30),
+	timely_responses int, 
+	timely_fixes int, 
+	timely_replacement int, 
+	reliability int, 
+	"options" int, 
+	respectful int,
+	courteous int,  
+	active_listening int, 
+	CONSTRAINT survey_responses_pkey PRIMARY KEY (customer_id)
+);
